@@ -1,0 +1,5 @@
+package goTEcho
+
+func Start() {
+
+}
