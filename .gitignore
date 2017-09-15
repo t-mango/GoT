@@ -2,3 +2,5 @@
 .vscode
 .vscode/*
 debug
+public/.idea
+public/.idea/*

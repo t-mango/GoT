@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>WebSocket</title>
+</head>
+
+<body>
+    <button onclick="sendMsg()"> 发送信息 </button>
+    <p id="output"></p>
+
+    <script>
+        function sendMsg() {
+            //alert(1)
+            ws.send('Hello, Server!');
+
+        }
+
+        var loc = window.location;
+        var uri = 'ws:';
+
+        if (loc.protocol === 'https:') {
+            uri = 'wss:';
+        }
+        uri += '//' + loc.host;
+        uri += loc.pathname + 'dd/tokeen111';
+
+        console.log(uri)
+        ws = new WebSocket(uri)
+
+        ws.onopen = function() {
+            console.log('Connected')
+        }
+
+
+        ws.onmessage = function(evt) {
+            var out = document.getElementById('output');
+            out.innerHTML += evt.data + '<br>';
+        }
+
+        // setInterval(function() {
+        //     ws.send('Hello, Server!');
+        // }, 1000);
+    </script>
+</body>
+
+</html>

@@ -1,5 +1,0 @@
-package tui
-
-func da() {
-  
-}

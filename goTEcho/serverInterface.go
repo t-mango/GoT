@@ -1,8 +1,28 @@
 package goTEcho
 
-//ServerInterface 
-type ServerInterface interface{
+import (
+	"GoT/goTEvent"
 
-	InitServer() *ServerInterface 
+	"golang.org/x/net/websocket"
+
+	"github.com/labstack/echo"
+)
+
+//WebServiceInterface is interface
+type WebServiceInterface interface {
 	Start()
+}
+
+//WebService is service
+type WebService struct {
+	*echo.Echo
+	ChanQueue goTEvent.EventQueue
+}
+//IWebSession
+type IWebSession interface {
+
+}
+type WebSession struct {
+	Guid string
+	Conn *websocket.Conn
 }
