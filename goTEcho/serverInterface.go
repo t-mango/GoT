@@ -18,9 +18,9 @@ type WebService struct {
 	*echo.Echo
 	ChanQueue goTEvent.EventQueue
 }
+
 //IWebSession
 type IWebSession interface {
-
 }
 type WebSession struct {
 	Guid string

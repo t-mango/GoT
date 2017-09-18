@@ -1,13 +1,14 @@
 package main
 
 import (
-	"GoT/goTEcho"
-	"GoT/goTEvent"
+	//"GoT/goTEcho"
+	//"GoT/goTEvent"
 	"fmt"
 	"strconv"
 
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
+	"GoT/goTUdp"
 )
 
 func test1(c echo.Context) error {
@@ -45,18 +46,19 @@ func test1(c echo.Context) error {
 
 func main() {
 
+	goTUdp.TStart()
 	//创建echo 数据
-	e := echo.New()
-	query := goTEvent.NewEventQueue(50)
-
-	server := goTEcho.NewWebService(e, query)
-	server.Start()
-
-	  <- query.Queue
-
-	// e.Static("/", "public/index.html")
-	// e.GET("/dd/:id", test1)
-	e.Logger.Fatal(e.Start(":8000"))
+	//e := echo.New()
+	//query := goTEvent.NewEventQueue(50)
+	//
+	//server := goTEcho.NewWebService(e, query)
+	//server.Start()
+	//
+	//  <- query.Queue
+	//
+	//// e.Static("/", "public/index.html")
+	//// e.GET("/dd/:id", test1)
+	//e.Logger.Fatal(e.Start(":8000"))
 
 	//fmt.Println("")
 	// ssh.Start()
