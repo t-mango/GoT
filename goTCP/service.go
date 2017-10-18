@@ -34,12 +34,13 @@ func NewService(port int) IService {
 }
 
 func (self *TCPService) SendAll(val string) error {
-
+	var i int = 0
 	if len(self.SessionList) > 0 {
 		for item := range self.SessionList {
+			i++
 			self.SessionList[item].SendMsg(val)
 		}
-		return errors.New("发送终端数" + strconv.Itoa(len(self.SessionList)))
+		return errors.New("发送终端数" + strconv.Itoa(i))
 	}
 	return errors.New("没有发现可用会话")
 }
