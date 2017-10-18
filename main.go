@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GoT/goTCP"
 	//"GoT/goTEcho"
 	//"GoT/goTEvent"
 	"fmt"
@@ -8,7 +9,6 @@ import (
 
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
-	"GoT/goTUdp"
 )
 
 func test1(c echo.Context) error {
@@ -46,7 +46,8 @@ func test1(c echo.Context) error {
 
 func main() {
 
-	goTUdp.TStart()
+	goTCP.TStart()
+	//goTUdp.TStart()
 	//创建echo 数据
 	//e := echo.New()
 	//query := goTEvent.NewEventQueue(50)
