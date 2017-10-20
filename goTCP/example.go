@@ -9,7 +9,7 @@ import (
 
 func TStart() {
 
-	service := NewService(6000)
+	service := NewService(8080)
 	go service.Start()
 
 	reader := bufio.NewReader(os.Stdin)

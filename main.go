@@ -2,6 +2,7 @@ package main
 
 import (
 	"GoT/goTCP"
+
 	//"GoT/goTEcho"
 	//"GoT/goTEvent"
 	"fmt"
@@ -46,8 +47,9 @@ func test1(c echo.Context) error {
 
 func main() {
 
-	goTCP.TStart()
+	//goTStaging.Start()
 	//goTUdp.TStart()
+	goTCP.TStart()
 	//创建echo 数据
 	//e := echo.New()
 	//query := goTEvent.NewEventQueue(50)

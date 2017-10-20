@@ -28,9 +28,7 @@ func NewService(port int) IService {
 		Addr:        addr,
 		SessionList: make(map[string]ISession),
 	}
-
 	return self
-
 }
 
 func (self *TCPService) SendAll(val string) error {
@@ -38,7 +36,10 @@ func (self *TCPService) SendAll(val string) error {
 	if len(self.SessionList) > 0 {
 		for item := range self.SessionList {
 			i++
-			self.SessionList[item].SendMsg(val)
+			go func() {
+				self.SessionList[item].SendMsg(val)
+			}()
+
 		}
 		return errors.New("发送终端数" + strconv.Itoa(i))
 	}
@@ -48,6 +49,7 @@ func (self *TCPService) SendAll(val string) error {
 func (self *TCPService) Start() {
 
 	listen, err := net.ListenTCP("tcp", self.Addr)
+	fmt.Println("服务器启动:", self.Addr.String())
 
 	if err != nil {
 		fmt.Println("服务器关闭", err.Error())
@@ -55,24 +57,27 @@ func (self *TCPService) Start() {
 
 	for {
 		//buf := make([]byte, 512)
-		con, err := listen.AcceptTCP()
+		con, err := listen.Accept()
 
 		if err != nil {
 			fmt.Println("会话错误", err.Error())
 			continue
 		}
+		// conn := &con
 		//msg := string(buf[0:n])
 		key := con.RemoteAddr().String()
-		_, ok := self.SessionList[key]
-		if ok {
+		fmt.Println("终端链接", key)
+		self.SessionList[key] = createSession(con.RemoteAddr(), con)
+		//session, ok := self.SessionList[key]
+		// if ok {
 
-			//session.ReceiveMsg(msg)
-		} else {
+		// 	//session.ReceiveMsg(msg)
+		// } else {
 
-			t := createSession(con.RemoteAddr(), con)
-			//t.ReceiveMsg(msg)
-			self.SessionList[key] = t
-		}
+		// 	t := createSession(con.RemoteAddr(), con)
+		// 	//t.ReceiveMsg(msg)
+		// 	self.SessionList[key] = t
+		// }
 
 	}
 
@@ -106,7 +111,8 @@ func (self *TCPService) Send(sessionId, val string) error {
 
 	session, ok := self.SessionList[sessionId]
 	if ok {
-		return session.SendMsg(val)
+		go session.SendMsg(val)
+		return nil
 	}
 	return errors.New("没有发现可用会话")
 }
@@ -114,12 +120,13 @@ func (self *TCPService) Send(sessionId, val string) error {
 type Session struct {
 	Addr           net.Addr
 	Key            string
-	Service        *net.TCPConn
+	Service        net.Conn
 	ReceiveMsgList []string
 	SendMsgList    []string
+	Stream         *SyncStream
 }
 
-func createSession(addr net.Addr, conn *net.TCPConn) ISession {
+func createSession(addr net.Addr, conn net.Conn) ISession {
 
 	self := &Session{
 		Service:        conn,
@@ -127,9 +134,83 @@ func createSession(addr net.Addr, conn *net.TCPConn) ISession {
 		Key:            addr.String(),
 		ReceiveMsgList: make([]string, 0),
 		SendMsgList:    make([]string, 0),
+		Stream: &SyncStream{
+			Conn: conn,
+		},
 	}
 
+	go recvThed(self)
+
 	return self
+}
+
+type SyncStream struct {
+	Conn net.Conn
+}
+
+func (self SyncStream) Read() error {
+
+	fmt.Println("开始读取")
+	// var PackageHeaderSize = 1024
+	// var byinputHeadBuffert = make([]byte, PackageHeaderSize)
+
+	// //var inputHeadBuffer = make([]byt, PackageHeaderSize)
+
+	// readers := bytes.NewReader(byinputHeadBuffert)
+
+	// if _, err := readers.Seek(0, 0); err != nil {
+	// 	fmt.Println("error seek 0 , 0")
+	// }
+
+	// t, err := io.ReadFull(self.Conn, byinputHeadBuffert)
+	// fmt.Println("开始到数据")
+	// if err != nil {
+	// 	fmt.Println("错误了")
+	// 	//var byt = make([]byte, 512)
+
+	// 	fmt.Println("我要关闭")
+	// 	self.Conn.Close()
+	// 	return err
+	// }
+
+	// var fullsize int
+	// if err = binary.Read(readers, binary.LittleEndian, &fullsize); err != nil {
+	// 	fmt.Println("错误", "binary")
+	// }
+
+	//err1 := binary.Read(readers, binary.LittleEndian, byt)
+
+	// if err1 != nil {
+	// 	fmt.Println(err.Error())
+	// }
+	var byt = make([]byte, 512)
+
+	i, err := self.Conn.Read(byt)
+	fmt.Println("读到到数据")
+	if err != nil {
+		fmt.Println("数据错误", err.Error())
+		return err
+	}
+	// io.ReadFull(self.Conn, byt)
+
+	for index := 0; index < i; index++ {
+		fmt.Printf("arr[%d]=%d \n", index, byt[index])
+	}
+
+	fmt.Println(string(byt[0:i]))
+	return nil
+}
+
+func recvThed(session *Session) {
+
+	for {
+		fmt.Println("read")
+		if err := session.Stream.Read(); err != nil {
+			break
+		}
+
+	}
+
 }
 
 type ISession interface {
@@ -184,6 +265,7 @@ func (self *Session) ToString() {
 }
 
 func (self *Session) SendMsg(val string) error {
+
 	self.SendMsgList = append(self.SendMsgList, format("发送", val))
 	_, err := self.Service.Write([]byte(val))
 	//_, err := self.Service.WriteToUDP([]byte(val), self.Addr)
