@@ -143,25 +143,6 @@ func createSession(addr net.Addr, conn net.Conn) ISession {
 
 	go recvThed(self, state)
 
-	ticker := time.NewTicker(time.Second * 1)
-
-	go func() {
-
-		n := <-state
-		fmt.Println(n)
-		ticker.Stop()
-
-	}()
-
-	go func() {
-		var i int = 0
-		for _ = range ticker.C {
-
-			conn.Write([]byte("come from 2:" + strconv.Itoa(i)))
-			i++
-		}
-	}()
-
 	return self
 }
 
@@ -171,49 +152,14 @@ type SyncStream struct {
 
 func (self SyncStream) Read() error {
 
-	fmt.Println("开始读取")
-	// var PackageHeaderSize = 1024
-	// var byinputHeadBuffert = make([]byte, PackageHeaderSize)
-
-	// //var inputHeadBuffer = make([]byt, PackageHeaderSize)
-
-	// readers := bytes.NewReader(byinputHeadBuffert)
-
-	// if _, err := readers.Seek(0, 0); err != nil {
-	// 	fmt.Println("error seek 0 , 0")
-	// }
-
-	// t, err := io.ReadFull(self.Conn, byinputHeadBuffert)
-	// fmt.Println("开始到数据")
-	// if err != nil {
-	// 	fmt.Println("错误了")
-	// 	//var byt = make([]byte, 512)
-
-	// 	fmt.Println("我要关闭")
-	// 	self.Conn.Close()
-	// 	return err
-	// }
-
-	// var fullsize int
-	// if err = binary.Read(readers, binary.LittleEndian, &fullsize); err != nil {
-	// 	fmt.Println("错误", "binary")
-	// }
-
-	//err1 := binary.Read(readers, binary.LittleEndian, byt)
-
-	// if err1 != nil {
-	// 	fmt.Println(err.Error())
-	// }
 	var byt = make([]byte, 512)
 
 	i, err := self.Conn.Read(byt)
-	fmt.Println("读到到数据")
+
 	if err != nil {
 		fmt.Println("数据错误", err.Error())
 		return err
 	}
-	// io.ReadFull(self.Conn, byt)
-
 	for index := 0; index < i; index++ {
 		fmt.Printf("arr[%d]=%d \n", index, byt[index])
 	}
@@ -225,12 +171,10 @@ func (self SyncStream) Read() error {
 func recvThed(session *Session, stop chan int) {
 
 	for {
-		fmt.Println("read")
 		if err := session.Stream.Read(); err != nil {
 			stop <- 1
 			break
 		}
-
 	}
 
 }
