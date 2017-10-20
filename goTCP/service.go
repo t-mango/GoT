@@ -139,7 +139,28 @@ func createSession(addr net.Addr, conn net.Conn) ISession {
 		},
 	}
 
-	go recvThed(self)
+	state := make(chan int)
+
+	go recvThed(self, state)
+
+	ticker := time.NewTicker(time.Second * 1)
+
+	go func() {
+
+		n := <-state
+		fmt.Println(n)
+		ticker.Stop()
+
+	}()
+
+	go func() {
+		var i int = 0
+		for _ = range ticker.C {
+
+			conn.Write([]byte("come from 1:" + strconv.Itoa(i)))
+			i++
+		}
+	}()
 
 	return self
 }
@@ -201,11 +222,12 @@ func (self SyncStream) Read() error {
 	return nil
 }
 
-func recvThed(session *Session) {
+func recvThed(session *Session, stop chan int) {
 
 	for {
 		fmt.Println("read")
 		if err := session.Stream.Read(); err != nil {
+			stop <- 1
 			break
 		}
 
