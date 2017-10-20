@@ -157,7 +157,7 @@ func createSession(addr net.Addr, conn net.Conn) ISession {
 		var i int = 0
 		for _ = range ticker.C {
 
-			conn.Write([]byte("come from 1:" + strconv.Itoa(i)))
+			conn.Write([]byte("come from 2:" + strconv.Itoa(i)))
 			i++
 		}
 	}()
