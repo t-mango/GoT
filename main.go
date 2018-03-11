@@ -1,55 +1,55 @@
 package main
 
-import (
-	"GoT/goTCP"
+import "GoT/wtiot"
 
-	//"GoT/goTEcho"
-	//"GoT/goTEvent"
-	"fmt"
-	"strconv"
+//"GoT/goTEcho"
+//"GoT/goTEvent"
 
-	"github.com/labstack/echo"
-	"golang.org/x/net/websocket"
-)
+// func test1(c echo.Context) error {
 
-func test1(c echo.Context) error {
+// 	fmt.Println(1, c.FormValue("id"))
+// 	//fmt.Println(2, c.FormParams("id"))
+// 	fmt.Println(3, c.Param("id"))
+// 	fmt.Println(4, c.QueryParam("id"))
 
-	fmt.Println(1, c.FormValue("id"))
-	//fmt.Println(2, c.FormParams("id"))
-	fmt.Println(3, c.Param("id"))
-	fmt.Println(4, c.QueryParam("id"))
+// 	websocket.Handler(func(ws *websocket.Conn) {
+// 		defer ws.Close()
+// 		i := 0
+// 		for {
+// 			// Write
+// 			err := websocket.Message.Send(ws, "Hello, Client!,"+strconv.Itoa(i))
+// 			if err != nil {
 
-	websocket.Handler(func(ws *websocket.Conn) {
-		defer ws.Close()
-		i := 0
-		for {
-			// Write
-			err := websocket.Message.Send(ws, "Hello, Client!,"+strconv.Itoa(i))
-			if err != nil {
-
-				c.Logger().Error(err)
-				return
-			}
-			fmt.Println("到了", i)
-			// // Read
-			msg := ""
-			err = websocket.Message.Receive(ws, &msg)
-			if err != nil {
-				c.Logger().Error(err)
-				return
-			}
-			fmt.Printf("%s\n", msg)
-			i++
-		}
-	}).ServeHTTP(c.Response(), c.Request())
-	return nil
-}
+// 				c.Logger().Error(err)
+// 				return
+// 			}
+// 			fmt.Println("到了", i)
+// 			// // Read
+// 			msg := ""
+// 			err = websocket.Message.Receive(ws, &msg)
+// 			if err != nil {
+// 				c.Logger().Error(err)
+// 				return
+// 			}
+// 			fmt.Printf("%s\n", msg)
+// 			i++
+// 		}
+// 	}).ServeHTTP(c.Response(), c.Request())
+// 	return nil
+// }
 
 func main() {
 
+	/******
+	  iot平台对接 1.0.1
+	*/
+	wtiot.Start()
+
+	/*******/
+
 	//goTStaging.Start()
 	//goTUdp.TStart()
-	goTCP.TStart()
+	//goTCP.TStart()
 	//创建echo 数据
 	//e := echo.New()
 	//query := goTEvent.NewEventQueue(50)
