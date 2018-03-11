@@ -6,6 +6,7 @@ func initRoute(e *echo.Echo) {
 
 	///device/list
 	e.GET("/device/list", deviceList)
+
 	///device/cmdhistorylist
 	e.GET("/device/cmdhistorylist", deviceCmdhistorylist)
 	//device/list
