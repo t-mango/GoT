@@ -11,5 +11,5 @@ func initRoute(e *echo.Echo) {
 	e.GET("/device/cmdhistorylist", deviceCmdhistorylist)
 	//device/list
 
-	e.GET("/divice/:divicerid/cmd/:action", cmdAction)
+	e.GET("/:divicerId/:action", cmdAction)
 }

@@ -21,3 +21,12 @@ func TestAdd(t *testing.T) {
 	}
 
 }
+
+func TestActionCommand(t *testing.T) {
+
+	_, err := wtiot.ActionCommand("36cfeaa4c23047ad8ab4c5f9a7a79ec6", "2")
+	if err != nil {
+		t.Error("错误", err.Error())
+	}
+
+}
