@@ -14,7 +14,15 @@ type ResParam struct {
 
 func deviceList(c echo.Context) error {
 
-	return c.String(http.StatusOK, "Hello, World!")
+	list, err := GetDevices()
+	if err != nil {
+		list = []string{}
+	}
+	result := new(ResParam)
+	result.Result = 0
+	result.Msg = "success"
+	result.Data = list
+	return c.JSON(http.StatusOK, result)
 }
 
 func deviceCmdhistorylist(c echo.Context) error {

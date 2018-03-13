@@ -11,6 +11,15 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+const (
+	WT_DEVICELIST_S     = "WT:DEVICELIST"
+	WT_DEVICE_H         = "WT:DEVICE:"        //
+	WT_DEVICECOMMAND_K  = "WT:DEVICECOMMAND:" //
+	WT_DEVICE_HISTORY_H = "WT:DEVICEHISTORY:"
+	WT_DEVICE_TIME_L    = "WT:DEVICETIME:"
+	SubKey              = "WTCLIENTCHAN"
+)
+
 //注册redis
 func hello(c echo.Context) error {
 	websocket.Handler(func(ws *websocket.Conn) {
