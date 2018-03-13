@@ -33,7 +33,7 @@ func GetHistroy(deviceId string) ([]string, error) {
 	sort := &redis.Sort{}
 	sort.By = WT_DEVICE_HISTORY_H + deviceId + ":*"
 	sort.Order = "DESC"
-	sort.Get = []string{"action"} //, "type", "content", "time"} //, "type", "content"} //, "state", "state_0", "state_1"}
+	sort.Get = []string{WT_DEVICE_HISTORY_H + deviceId + ":*->action", WT_DEVICE_HISTORY_H + deviceId + ":*->type", WT_DEVICE_HISTORY_H + deviceId + ":*->state"} //, "type", "content", "time"} //, "type", "content"} //, "state", "state_0", "state_1"}
 	return redisClient.Sort(WT_DEVICE_TIME_L+deviceId, sort).Result()
 
 	// if err != nil {
