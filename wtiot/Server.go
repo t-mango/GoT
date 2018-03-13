@@ -89,6 +89,7 @@ func Start() {
 
 	// e.POST("/login", login)
 
+	initRoute(e)
 	e.Static("/", "wtiot/html/index.html")
 
 	// //jwt

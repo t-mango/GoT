@@ -30,3 +30,16 @@ func TestActionCommand(t *testing.T) {
 	}
 
 }
+func TestGetDevices(t *testing.T) {
+
+	strlist, err := wtiot.GetDevices()
+	if err != nil {
+		t.Error("错误", err.Error())
+	}
+
+	for item := range strlist {
+		t.Log(item)
+		//fmt.Println(item)
+	}
+
+}
