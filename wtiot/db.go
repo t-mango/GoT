@@ -8,7 +8,7 @@ var redisClient *redis.Client
 
 func init() {
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     "192.168.1.106:6379",
+		Addr:     "127.0.0.1:6379",
 		Password: "", // no password set
 		DB:       2,  // use default DB
 	})
@@ -30,10 +30,21 @@ func GetDevices() ([]string, error) {
 
 func GetHistroy(deviceId string) ([]string, error) {
 
-	sort := &redis.Sort{}
+	sort := redis.Sort{}
 	sort.By = WT_DEVICE_HISTORY_H + deviceId + ":*"
 	sort.Order = "DESC"
-	sort.Get = []string{WT_DEVICE_HISTORY_H + deviceId + ":*->action", WT_DEVICE_HISTORY_H + deviceId + ":*->type", WT_DEVICE_HISTORY_H + deviceId + ":*->state"} //, "type", "content", "time"} //, "type", "content"} //, "state", "state_0", "state_1"}
+	sort.Get = []string{
+		WT_DEVICE_HISTORY_H + deviceId + ":*->time",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->action",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->type",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->state",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->state_0",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->state_1",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->state_2",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->state_3",
+	}
+	//, "type", "content", "time"} //, "type", "content"} //, "state", "state_0", "state_1"}
+
 	return redisClient.Sort(WT_DEVICE_TIME_L+deviceId, sort).Result()
 
 	// if err != nil {
@@ -46,4 +57,8 @@ func GetHistroy(deviceId string) ([]string, error) {
 	// 	historys["1"] = value.(string)
 	// }
 	// return nil, historys
+}
+
+func HGetAll(hKey string) (map[string]string, error) {
+	return redisClient.HGetAll(hKey).Result()
 }

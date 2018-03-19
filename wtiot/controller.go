@@ -1,6 +1,7 @@
 package wtiot
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -13,6 +14,8 @@ type ResParam struct {
 }
 
 func deviceList(c echo.Context) error {
+	req := c.Request()
+	fmt.Println("Proto", req.Proto)
 
 	list, err := GetDevices()
 	if err != nil {
@@ -26,7 +29,40 @@ func deviceList(c echo.Context) error {
 }
 
 func deviceCmdhistorylist(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
+	deviceId := c.Param("divicerId")
+	result := new(ResParam)
+	list, err := GetHistroy(deviceId)
+	topArray := make([][]string, 0)
+
+	length := len(list)
+	for i := 0; 8*i+7 <= length; i++ {
+
+		topArray = append(topArray, list[8*i:8*i+8])
+	}
+
+	topMap := make([]map[string]string, 0)
+	for _, item := range topArray {
+		temp := make(map[string]string)
+		temp["time"] = item[0]
+		temp["action"] = item[1]
+		temp["type"] = item[2]
+		temp["state"] = item[3]
+		temp["state_0"] = item[4]
+		temp["state_1"] = item[5]
+		temp["state_2"] = item[6]
+		temp["state_3"] = item[7]
+		topMap = append(topMap, temp)
+	}
+	result.Data = topMap
+
+	if err != nil {
+		if err != nil {
+			result.Result = 1
+			result.Msg = "命令下达失败:" + err.Error()
+		}
+	}
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func cmdAction(c echo.Context) error {

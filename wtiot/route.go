@@ -8,8 +8,8 @@ func initRoute(e *echo.Echo) {
 	e.GET("/device/list", deviceList)
 
 	///device/cmdhistorylist
-	e.GET("/device/cmdhistorylist", deviceCmdhistorylist)
+	e.GET("/device/cmdhistorylist/:divicerId", deviceCmdhistorylist)
 	//device/list
 
-	e.GET("/:divicerId/:action", cmdAction)
+	e.GET("/device/action/:divicerId/:action", cmdAction)
 }

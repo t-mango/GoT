@@ -17,22 +17,22 @@
       uri = 'wss:';
     }
     uri += '//' + loc.host;
-    uri += loc.pathname + 'websocket/ws';
+    uri += loc.pathname + 'websocket/36cfeaa4c23047ad8ab4c5f9a7a79ec6';
 
     ws = new WebSocket(uri)
 
-    ws.onopen = function() {
+    ws.onopen = function () {
       console.log('Connected')
     }
 
-    ws.onmessage = function(evt) {
+    ws.onmessage = function (evt) {
       var out = document.getElementById('output');
       out.innerHTML += evt.data + '<br>';
     }
 
-    setInterval(function() {
-      ws.send('Hello, Server!');
-    }, 1000);
+    // setInterval(function () {
+    //   ws.send('Hello, Server!');
+    // }, 1000);
   </script>
 </body>
 
