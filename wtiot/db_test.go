@@ -3,6 +3,7 @@ package wtiot_test
 import (
 	"GoT/wtiot"
 	"fmt"
+	"runtime"
 	"strconv"
 	"testing"
 	"time"
@@ -24,7 +25,7 @@ func TestAdd(t *testing.T) {
 }
 func TestGetHistroy(t *testing.T) {
 
-	list, err := wtiot.GetHistroy("36cfeaa4c23047ad8ab4c5f9a7a79ec6")
+	list, err := wtiot.GetHistroy("8ff2a33b771b4fcea170ebc7247a28e0")
 	if err != nil {
 		t.Error("错误", err.Error())
 	}
@@ -35,9 +36,10 @@ func TestGetHistroy(t *testing.T) {
 	topArray := make([][]string, 0)
 
 	length := len(list)
-	for i := 0; 8*i+7 <= length; i++ {
+	temp := 10
+	for i := 0; temp*i+(temp-1) <= length; i++ {
 
-		topArray = append(topArray, list[8*i:8*i+8])
+		topArray = append(topArray, list[temp*i:temp*i+temp])
 	}
 
 	topMap := make([]map[string]string, 0)
@@ -51,6 +53,8 @@ func TestGetHistroy(t *testing.T) {
 		temp["state_1"] = item[5]
 		temp["state_2"] = item[6]
 		temp["state_3"] = item[7]
+		temp["keyTime"] = item[8]
+		temp["content"] = item[9]
 		topMap = append(topMap, temp)
 	}
 
@@ -81,7 +85,7 @@ func TestGetDevices(t *testing.T) {
 }
 func TestHGetAll(t *testing.T) {
 
-	strlist, err := wtiot.HGetAll(wtiot.WT_DEVICE_HISTORY_H+"36cfeaa4c23047ad8ab4c5f9a7a79ec6:1521013941")
+	strlist, err := wtiot.HGetAll(wtiot.WT_DEVICE_HISTORY_H + "36cfeaa4c23047ad8ab4c5f9a7a79ec6:1521013941")
 
 	if err != nil {
 		t.Error("错误", err.Error())
@@ -92,4 +96,16 @@ func TestHGetAll(t *testing.T) {
 		//fmt.Println(item)
 	}
 
+}
+func say(s string) {
+	for i := 0; i < 5; i++ {
+		runtime.Gosched()
+		//time.Sleep(100 * time.Millisecond)
+		fmt.Println(s)
+	}
+}
+
+func TestTheard(t *testing.T) {
+	go say("hello")
+	say("word")
 }

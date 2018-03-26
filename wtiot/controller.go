@@ -35,14 +35,16 @@ func deviceCmdhistorylist(c echo.Context) error {
 	topArray := make([][]string, 0)
 
 	length := len(list)
-	for i := 0; 8*i+7 <= length; i++ {
+	temp := 10
+	for i := 0; temp*i+(temp-1) <= length; i++ {
 
-		topArray = append(topArray, list[8*i:8*i+8])
+		topArray = append(topArray, list[temp*i:temp*i+temp])
 	}
 
 	topMap := make([]map[string]string, 0)
 	for _, item := range topArray {
 		temp := make(map[string]string)
+
 		temp["time"] = item[0]
 		temp["action"] = item[1]
 		temp["type"] = item[2]
@@ -51,6 +53,8 @@ func deviceCmdhistorylist(c echo.Context) error {
 		temp["state_1"] = item[5]
 		temp["state_2"] = item[6]
 		temp["state_3"] = item[7]
+		temp["keyTime"] = item[8]
+		temp["content"] = item[9]
 		topMap = append(topMap, temp)
 	}
 	result.Data = topMap

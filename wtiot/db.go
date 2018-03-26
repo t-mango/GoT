@@ -8,9 +8,9 @@ var redisClient *redis.Client
 
 func init() {
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
-		Password: "", // no password set
-		DB:       2,  // use default DB
+		Addr:     "115.159.125.233:6379",
+		Password: "feifeidemao", // no password set
+		DB:       2,             // use default DB
 	})
 }
 
@@ -42,6 +42,8 @@ func GetHistroy(deviceId string) ([]string, error) {
 		WT_DEVICE_HISTORY_H + deviceId + ":*->state_1",
 		WT_DEVICE_HISTORY_H + deviceId + ":*->state_2",
 		WT_DEVICE_HISTORY_H + deviceId + ":*->state_3",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->keyTime",
+		WT_DEVICE_HISTORY_H + deviceId + ":*->content",
 	}
 	//, "type", "content", "time"} //, "type", "content"} //, "state", "state_0", "state_1"}
 
